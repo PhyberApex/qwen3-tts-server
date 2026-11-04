@@ -1,0 +1,30 @@
+name: Checks
+
+on:
+  workflow_call:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install the test dependencies
+        run: pip install "fastapi==$(grep '^fastapi==' requirements.txt | cut -d= -f3)" httpx
+      - name: Test
+        run: python -m unittest discover -p 'test_*.py' -v
+      - name: Free runner disk for the CUDA base image
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+      - name: Build the image
+        run: docker build -t qwen3-tts-server:ci .
+      - name: Import the app and flash-attn inside the image
+        run: docker run --rm --entrypoint python qwen3-tts-server:ci -c "import app, flash_attn; print(app.TASK_MODELS, flash_attn.__version__)"

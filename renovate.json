@@ -1,0 +1,54 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "docker:pinDigests"
+  ],
+  "customManagers": [
+    {
+      "description": "The flash-attn wheel is pinned by the FLASH_ATTN_VERSION build arg and downloaded from the project's GitHub release, so it is tracked against those releases rather than PyPI (whose sdist would compile for an hour).",
+      "customType": "regex",
+      "managerFilePatterns": ["/^Dockerfile$/"],
+      "matchStrings": ["ARG FLASH_ATTN_VERSION=(?<currentValue>\\S+)"],
+      "depNameTemplate": "Dao-AILab/flash-attention",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$",
+      "versioningTemplate": "pep440"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Minor and patch updates merge themselves once the checks pass",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest",
+        "pin"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "docker-compose.yml is the usage example and names this repo's own image on purpose; pinning or bumping it there would only ever point readers at a stale digest",
+      "matchPackageNames": [
+        "ghcr.io/phyberapex/qwen3-tts-server"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Hold pytorch/pytorch on 2.6.0 and move only its digest: the flash-attn release wheel the Dockerfile installs is built for torch 2.6, and newer torch tags (2.14+) swap conda for Ubuntu's PEP 668 system Python, so a bump needs a new wheel and a Dockerfile change together. Lift this once a flash-attn release ships a wheel for the new torch.",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["pytorch/pytorch"],
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "enabled": false
+    },
+    {
+      "description": "A base-image, pip or flash-attn bump changes the published image, so it is a fix: release-please cuts a patch release for it. Workflow-action bumps stay chores and release nothing.",
+      "matchManagers": [
+        "dockerfile",
+        "pip_requirements",
+        "custom.regex"
+      ],
+      "semanticCommitType": "fix"
+    }
+  ]
+}

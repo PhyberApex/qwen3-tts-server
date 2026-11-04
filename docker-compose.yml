@@ -1,0 +1,24 @@
+services:
+  qwen3-tts:
+    image: ghcr.io/phyberapex/qwen3-tts-server:latest
+    container_name: qwen3-tts
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DEFAULT_TASK_TYPE=Base
+      - MAX_CACHED_PROMPTS=16
+      # - TTS_API_KEY=change-me
+      # - HF_TOKEN=hf_...
+    volumes:
+      - hf-cache:/root/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  hf-cache:
