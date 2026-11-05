@@ -3,7 +3,7 @@
 # torch has no matching release wheel yet.
 FROM pytorch/pytorch:2.6.0-cuda12.6-cudnn9-runtime@sha256:f894dae26e1ee8557c544f9cfdb9dc011b1552bf3c1e656b422f2e221d380e40
 
-ARG FLASH_ATTN_VERSION=2.8.3.post1
+ARG FLASH_ATTN_VERSION=2.8.3.post2
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl sox libsox-fmt-all \
     && rm -rf /var/lib/apt/lists/*
