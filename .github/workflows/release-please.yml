@@ -18,9 +18,11 @@ jobs:
       - name: Release Please
         id: release
         uses: googleapis/release-please-action@v5
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
 
-  # A release created with GITHUB_TOKEN never fires a `release` event, so the
-  # release image is built here, in the same run, instead of in its own workflow.
+  # The release image is built in the same run so it can read release-please's
+  # outputs directly instead of depending on a separate `release` event.
   build-and-push-release:
     runs-on: ubuntu-latest
     needs: release-please
