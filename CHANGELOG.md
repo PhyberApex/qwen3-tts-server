@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.5](https://github.com/PhyberApex/qwen3-tts-server/compare/v1.0.4...v1.0.5) (2026-11-19)
+
+
+### Bug Fixes
+
+* **deps:** update dependency fastapi to v0.163.2 ([#20](https://github.com/PhyberApex/qwen3-tts-server/issues/20)) ([e7ce7b7](https://github.com/PhyberApex/qwen3-tts-server/commit/e7ce7b750fc416d0eeb13a6116cd60bd0e6d8a00))
+* **deps:** update dependency fastapi to v0.165.0 ([#22](https://github.com/PhyberApex/qwen3-tts-server/issues/22)) ([55096d4](https://github.com/PhyberApex/qwen3-tts-server/commit/55096d49211bb0576b2eb6ee6dbd0f7bcd7502bb))
+
 ## [1.0.4](https://github.com/PhyberApex/qwen3-tts-server/compare/v1.0.3...v1.0.4) (2026-11-15)
 
 
